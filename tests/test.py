@@ -166,8 +166,6 @@ if __name__ == '__main__':
 
     if args.device == "xpu":
         import intel_extension_for_pytorch
-    elif args.device == "cuda":
-        torch.backends.cuda.matmul.allow_tf32 = False
 
     if args.arch == "LeViT" or args.arch == "Token-to-Token-ViT":
         args.image_size = 224
