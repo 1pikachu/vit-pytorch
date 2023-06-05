@@ -89,6 +89,10 @@ def test(args):
 
     model, input = create_model_input(args)
 
+    if args.device == "xpu":
+        model = torch.xpu.optimize(model, dtype=args.amp_dtype)
+        print("---- enable xpu optimize")
+
     # NHWC
     if args.channels_last or args.device == "cuda":
         try:
@@ -179,15 +183,15 @@ if __name__ == '__main__':
     # start test
     if args.precision == "bfloat16":
         amp_enable = True
-        amp_dtype = torch.bfloat16
+        args.amp_dtype = torch.bfloat16
     elif args.precision == "float16":
         amp_enable = True
-        amp_dtype = torch.float16
+        args.amp_dtype = torch.float16
     else:
         amp_enable = False
-        amp_dtype = torch.float32
-    print("----amp enable: {}, amp dtype: {}".format(amp_enable, amp_dtype))
+        args.amp_dtype = torch.float32
+    print("----amp enable: {}, amp dtype: {}".format(amp_enable, args.amp_dtype))
 
-    with torch.autocast(device_type=args.device, enabled=amp_enable, dtype=amp_dtype):
+    with torch.autocast(device_type=args.device, enabled=amp_enable, dtype=args.amp_dtype):
         test(args)
 
