@@ -17,8 +17,8 @@ setup(
   ],
   install_requires=[
     'einops>=0.6.1',
-    'torch>=1.10',
-    'torchvision'
+    #'torch>=1.10',
+    #'torchvision'
   ],
   setup_requires=[
     'pytest-runner',
