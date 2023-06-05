@@ -131,7 +131,10 @@ def test(args):
             with context_func(args.profile if i == profile_len else False, args.device, fuser_mode) as prof:
                 input = input.to(args.device)
                 preds = model(input)
-                torch.cuda.synchronize()
+                if args.device == "xpu":
+                    torch.xpu.synchronize()
+                elif args.device == "cuda":
+                    torch.cuda.synchronize()
             toc = time.time()
             # caculate time
             print("Iteration: {}, inference time: {} sec.".format(i, toc - tic), flush=True)
