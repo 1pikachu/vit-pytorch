@@ -117,6 +117,10 @@ def test(args):
         fuser_mode = "none"
     print("---- fuser mode:", fuser_mode)
 
+    if args.compile:
+        print("----enable compiler")
+        model = torch.compile(model, backend=args.backend, options={"freezing": True})
+
     # compute
     total_sample = 0
     total_time = 0.0
@@ -169,6 +173,8 @@ if __name__ == '__main__':
     parser.add_argument('--num_warmup', default=20, type=int, help='test warmup')
     parser.add_argument('--image_size', default=256, type=int)
     parser.add_argument('--device', default='cuda', choices=['xpu', 'cuda', 'cpu'], type=str)
+    parser.add_argument('--compile', action='store_true', default=False, help='compile model')
+    parser.add_argument('--backend', default="inductor", type=str, help='backend')
     args = parser.parse_args()
 
     if args.device == "xpu":
