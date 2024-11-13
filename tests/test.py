@@ -89,7 +89,7 @@ def test(args):
 
     model, input = create_model_input(args)
 
-    if args.device == "xpu":
+    if args.device == "xpu" and args.ipex:
         model = torch.xpu.optimize(model, dtype=args.amp_dtype)
         print("---- enable xpu optimize")
 
@@ -175,10 +175,12 @@ if __name__ == '__main__':
     parser.add_argument('--device', default='cuda', choices=['xpu', 'cuda', 'cpu'], type=str)
     parser.add_argument('--compile', action='store_true', default=False, help='compile model')
     parser.add_argument('--backend', default="inductor", type=str, help='backend')
+    parser.add_argument('--ipex', action='store_true', default=False)
     args = parser.parse_args()
 
-    if args.device == "xpu":
+    if args.device == "xpu" and args.ipex:
         import intel_extension_for_pytorch
+        print("Use IPEX")
 
     if args.arch == "LeViT" or args.arch == "Token-to-Token-ViT":
         args.image_size = 224
